@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0
+    hostname: keycloak
+    # entrypoint: /opt/keycloak/bin/kc.sh start-dev
+    # if you want to import a realm:
+    entrypoint: /opt/keycloak/bin/kc.sh start-dev --import-realm
+    volumes:
+     - ./keycloak:/opt/keycloak/data/import
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    networks:
+      default:
+        aliases:
+          - keycloak.localtest.me
+    ports:
+      - 8080:8080
+  backend:
+    build:
+      context: .
+    ports:
+      - 8081:8080
+    environment:
+      QUARKUS_OIDC_AUTH_SERVER_URL: "http://keycloak.localtest.me:8080/realms/quarkus"
+    restart: on-failure
