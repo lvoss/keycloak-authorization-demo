@@ -15,7 +15,7 @@ This demo uses keycloak authorization services to manage the endpoint security f
     curl --insecure -X POST http://keycloak.localtest.me:8080/realms/quarkus/protocol/openid-connect/token \
       --user backend-service:secret \
       -H 'content-type: application/x-www-form-urlencoded' \
-      -d 'username=user&password=password&grant_type=password' | jq --raw-output '.access_token' \
+      -d 'username=read-user&password=password&grant_type=password' | jq --raw-output '.access_token' \
     )
 
   curl http://localhost:8081/helloworld --header "Authorization: Bearer $access_token"
@@ -37,3 +37,16 @@ Response Code: `200 OK`, Body: `hello world`
 ```
 
 Response Code: `403 Forbidden`
+
+To change the HelloWorld-message, the `editor` - Role is required. For that we use the user `edit-user`
+
+```bash
+  export access_token=$(\
+    curl --insecure -X POST http://keycloak.localtest.me:8080/realms/quarkus/protocol/openid-connect/token \
+      --user backend-service:secret \
+      -H 'content-type: application/x-www-form-urlencoded' \
+      -d 'username=edit-user&password=password&grant_type=password' | jq --raw-output '.access_token' \
+    )
+
+  curl -X PUT http://localhost:8081/helloworld?message=myNewHelloWorldMessage --header "Authorization: Bearer $access_token"
+```

@@ -255,6 +255,13 @@
         "containerId" : "157fa88f-1329-4644-aeb0-8e7297e8f0eb",
         "attributes" : { }
       }, {
+        "id" : "484a914f-3e9b-4f4c-84ce-2c16fa967aa8",
+        "name" : "editor",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "157fa88f-1329-4644-aeb0-8e7297e8f0eb",
+        "attributes" : { }
+      }, {
         "id" : "9c54d86b-347b-4749-ab32-bc473eaef47c",
         "name" : "uma_protection",
         "composite" : false,
@@ -406,7 +413,7 @@
   }, {
     "id" : "48f2996a-d22b-4b80-a6e9-81075e393838",
     "createdTimestamp" : 1690372023149,
-    "username" : "user",
+    "username" : "read-user",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
@@ -428,7 +435,34 @@
     },
     "notBefore" : 0,
     "groups" : [ ]
-  }, {
+  }, 
+  {
+    "id" : "08b40862-1bb9-413f-8708-d4e164bcff5b",
+    "createdTimestamp" : 1690372023149,
+    "username" : "edit-user",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "",
+    "lastName" : "",
+    "credentials" : [ {
+      "id" : "eafe689b-958e-444f-aa78-020b6cc0fe8f",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1690372035061,
+      "secretData" : "{\"value\":\"f+8QMg5HPSLA2N9d78n52Kpskoi8KqLqAQzcGpLkNKfeDTRKaU/lya+GJm/1MO3CFl51aoVb0JEeAzyX+sRVEA==\",\"salt\":\"c7hiXr08ELgUjv+ISy3zUg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-quarkus" ],
+    "clientRoles" : {
+      "backend-service" : [ "reader", "editor" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+},
+{
     "id" : "ddab1216-fec9-48f7-84a7-e87e72bfc311",
     "createdTimestamp" : 1690372672137,
     "username" : "john",
@@ -632,60 +666,101 @@
     "defaultClientScopes" : [ "web-origins", "acr", "profile", "roles", "email" ],
     "optionalClientScopes" : [ "address", "phone", "offline_access", "microprofile-jwt" ],
     "authorizationSettings" : {
-      "allowRemoteResourceManagement" : true,
-      "policyEnforcementMode" : "ENFORCING",
-      "resources" : [ {
-        "name" : "helloworld",
-        "ownerManagedAccess" : false,
-        "attributes" : { },
-        "_id" : "cc88ff81-3250-487b-bd3e-1c3976d394fe",
-        "uris" : [ "/helloworld" ],
-        "scopes" : [ {
-          "name" : "GET"
-        } ],
-        "icon_uri" : ""
-      } ],
-      "policies" : [ {
-        "id" : "f9a4a08e-e129-44e8-8cc2-8a76f6b0dd7e",
-        "name" : "reader",
-        "description" : "",
-        "type" : "role",
-        "logic" : "POSITIVE",
-        "decisionStrategy" : "UNANIMOUS",
-        "config" : {
-          "roles" : "[{\"id\":\"backend-service/reader\",\"required\":false}]"
+      "allowRemoteResourceManagement": true,
+      "policyEnforcementMode": "ENFORCING",
+      "resources": [
+        {
+          "name": "helloworld",
+          "ownerManagedAccess": false,
+          "attributes": {},
+          "_id": "cc88ff81-3250-487b-bd3e-1c3976d394fe",
+          "uris": [
+            "/helloworld"
+          ],
+          "scopes": [
+            {
+              "name": "GET"
+            },
+            {
+              "name": "PUT"
+            }
+          ],
+          "icon_uri": ""
         }
-      }, {
-        "id" : "211d697f-a6c3-4375-8a95-79edb6c52e81",
-        "name" : "helloworld",
-        "description" : "",
-        "type" : "scope",
-        "logic" : "POSITIVE",
-        "decisionStrategy" : "UNANIMOUS",
-        "config" : {
-          "resources" : "[\"helloworld\"]",
-          "scopes" : "[\"GET\"]",
-          "applyPolicies" : "[\"reader\"]"
+      ],
+      "policies": [
+        {
+          "id": "f9a4a08e-e129-44e8-8cc2-8a76f6b0dd7e",
+          "name": "reader",
+          "description": "",
+          "type": "role",
+          "logic": "POSITIVE",
+          "decisionStrategy": "UNANIMOUS",
+          "config": {
+            "roles": "[{\"id\":\"backend-service/reader\",\"required\":false}]"
+          }
+        },
+        {
+          "id": "2c60a8e6-14e3-40e3-8c72-12aea1a47fd3",
+          "name": "editor",
+          "description": "",
+          "type": "role",
+          "logic": "POSITIVE",
+          "decisionStrategy": "UNANIMOUS",
+          "config": {
+            "roles": "[{\"id\":\"backend-service/editor\",\"required\":false}]"
+          }
+        },
+        {
+          "id": "211d697f-a6c3-4375-8a95-79edb6c52e81",
+          "name": "helloworld",
+          "description": "",
+          "type": "scope",
+          "logic": "POSITIVE",
+          "decisionStrategy": "UNANIMOUS",
+          "config": {
+            "resources": "[\"helloworld\"]",
+            "scopes": "[\"GET\"]",
+            "applyPolicies": "[\"reader\"]"
+          }
+        },
+        {
+          "id": "3902fba3-bcb4-4971-9812-881d93a12da7",
+          "name": "helloworld-update",
+          "description": "",
+          "type": "scope",
+          "logic": "POSITIVE",
+          "decisionStrategy": "UNANIMOUS",
+          "config": {
+            "resources": "[\"helloworld\"]",
+            "scopes": "[\"PUT\"]",
+            "applyPolicies": "[\"editor\"]"
+          }
         }
-      } ],
-      "scopes" : [ {
-        "id" : "ba89c82e-35c9-41e3-94a8-9b3775813ef5",
-        "name" : "GET",
-        "iconUri" : ""
-      }, {
-        "id" : "96ce31e8-677e-40e1-9fce-333544da5c4f",
-        "name" : "POST",
-        "iconUri" : ""
-      }, {
-        "id" : "a01e8feb-7cf4-44cb-a630-2572b6c36e3e",
-        "name" : "PUT",
-        "iconUri" : ""
-      }, {
-        "id" : "441fd12c-ff13-4879-ae91-8ebc7bd5294d",
-        "name" : "DELETE",
-        "iconUri" : ""
-      } ],
-      "decisionStrategy" : "UNANIMOUS"
+      ],
+      "scopes": [
+        {
+          "id": "ba89c82e-35c9-41e3-94a8-9b3775813ef5",
+          "name": "GET",
+          "iconUri": ""
+        },
+        {
+          "id": "96ce31e8-677e-40e1-9fce-333544da5c4f",
+          "name": "POST",
+          "iconUri": ""
+        },
+        {
+          "id": "a01e8feb-7cf4-44cb-a630-2572b6c36e3e",
+          "name": "PUT",
+          "iconUri": ""
+        },
+        {
+          "id": "441fd12c-ff13-4879-ae91-8ebc7bd5294d",
+          "name": "DELETE",
+          "iconUri": ""
+        }
+      ],
+      "decisionStrategy": "UNANIMOUS"
     }
   }, {
     "id" : "5fa0a1f3-01b8-44a8-b0f9-57ee409d0904",
